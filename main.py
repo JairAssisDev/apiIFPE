@@ -28,7 +28,6 @@ def predict_and_explain(sex, redo, cpb, age, bsa, hb):
     prediction = model.predict([instance])
     exp = explainer.explain_instance(np.array(instance), model.predict_proba, num_features=6)
 
-    
     return jsonify({
             "prediction": bool(prediction[0]),
             "lime": exp.as_html()
