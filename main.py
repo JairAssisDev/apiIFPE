@@ -19,7 +19,7 @@ train = pd.read_csv("X_train.csv", usecols=range(1, 7)).to_numpy()
 class_names = model.classes_
 explainer = lime.lime_tabular.LimeTabularExplainer(train, feature_names=None, class_names=class_names, discretize_continuous=True)
 
-#@app.route("/predict", methods=["POST"])
+
 def predict_and_explain(sex, redo, cpb, age, bsa, hb):
     sex = 1 if sex == "Male" else 0
     redo = 1 if redo == "Yes" else 0
