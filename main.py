@@ -1,14 +1,10 @@
-from flask import Flask, request, jsonify,send_file
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import joblib
 import lime
 import lime.lime_tabular
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib
-import streamlit as st
-matplotlib.use('Agg')
 
 app = Flask(__name__)
 CORS(app)
@@ -18,7 +14,6 @@ model = joblib.load("LR.joblib")
 train = pd.read_csv("X_train.csv", usecols=range(1, 7)).to_numpy()
 class_names = model.classes_
 explainer = lime.lime_tabular.LimeTabularExplainer(train, feature_names=None, class_names=class_names, discretize_continuous=True)
-
 
 def predict_and_explain(sex, redo, cpb, age, bsa, hb):
     sex = 1 if sex == "Male" else 0
@@ -33,6 +28,9 @@ def predict_and_explain(sex, redo, cpb, age, bsa, hb):
             "lime": exp.as_html()
         })
 
+@app.route("/", methods=["GET"])
+def index():
+    return "Hello, World!"
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -47,9 +45,8 @@ def predict():
 
         return predict_and_explain(sex, redo, cpb, age, bsa, hb)
 
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500  # Retorna um erro 500 com uma mensagem de erro JSON
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    app.run()
